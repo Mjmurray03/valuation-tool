@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Small Business Valuation Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .output-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #dee2e6;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .risk-factors {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .metric-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .metric-card .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .valuation-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .range-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #dee2e6;
+        }
+
+        .range-card.low { border-color: #ffc107; background: #fff8e1; }
+        .range-card.mid { border-color: #28a745; background: #e8f5e9; }
+        .range-card.high { border-color: #dc3545; background: #ffebee; }
+
+        .range-card h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .range-card .amount {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .reliability-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .reliability-high { background: #d4edda; color: #155724; }
+        .reliability-medium { background: #fff3cd; color: #856404; }
+        .reliability-low { background: #f8d7da; color: #721c24; }
+
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .data-source {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .market-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .market-metric {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .market-metric h4 {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .market-metric .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .risk-factors {
+                grid-template-columns: 1fr;
+            }
+
+            .market-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Professional Small Business Valuation Tool</h1>
+            <p>Advanced valuation analysis based on BizBuySell 2024 transaction data</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">Business Information</h2>
+                
+                <div class="form-group">
+                    <label for="businessDescription">Business Description</label>
+                    <textarea id="businessDescription" placeholder="e.g., Diesel engine repair shop serving local trucking companies"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="annualRevenue">Annual Revenue ($)</label>
+                    <input type="number" id="annualRevenue" placeholder="800000">
+                </div>
+
+                <div class="form-group">
+                    <label for="ebitda">EBITDA/Cash Flow ($)</label>
+                    <input type="number" id="ebitda" placeholder="150000">
+                </div>
+
+                <div class="form-group">
+                    <label for="customerType">Customer Type</label>
+                    <select id="customerType">
+                        <option value="B2B">B2B</option>
+                        <option value="B2C">B2C</option>
+                        <option value="Mixed">Mixed</option>
+                        <option value="Government">Government</option>
+                    </select>
+                </div>
+
+                <h3 style="margin: 25px 0 15px 0; color: #495057;">Risk Assessment</h3>
+                <div class="risk-factors">
+                    <div class="form-group">
+                        <label for="topCustomer">Top Customer %</label>
+                        <input type="number" id="topCustomer" placeholder="35" min="0" max="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="managementDepth">Management</label>
+                        <select id="managementDepth">
+                            <option value="Owner Only">Owner Only</option>
+                            <option value="Key Person">Key Person</option>
+                            <option value="Professional Team">Professional Team</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recurringRevenue">Recurring Revenue %</label>
+                        <input type="number" id="recurringRevenue" placeholder="30" min="0" max="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="marketPosition">Market Position</label>
+                        <select id="marketPosition">
+                            <option value="Competitor">Competitor</option>
+                            <option value="Leader">Leader</option>
+                            <option value="Niche">Niche</option>
+                            <option value="Struggling">Struggling</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="geographicScope">Geographic Scope</label>
+                        <select id="geographicScope">
+                            <option value="Regional">Regional</option>
+                            <option value="Local">Local</option>
+                            <option value="National">National</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="industryTrend">Industry Trend</label>
+                        <select id="industryTrend">
+                            <option value="Stable">Stable</option>
+                            <option value="Growing">Growing</option>
+                            <option value="Declining">Declining</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateValuation()">
+                    Calculate Valuation
+                </button>
+            </div>
+
+            <div class="output-section">
+                <h2 class="section-title">Valuation Analysis</h2>
+                
+                <div id="industryClassification" class="metric-card">
+                    <h3>Industry Classification</h3>
+                    <div class="value">Enter business description</div>
+                    <div class="subtitle"></div>
+                </div>
+
+                <div class="market-metrics" id="marketMetrics">
+                    <div class="market-metric">
+                        <h4>Market Multiple</h4>
+                        <div class="value" id="marketMultiple">-</div>
+                    </div>
+                    <div class="market-metric">
+                        <h4>Sample Size</h4>
+                        <div class="value" id="sampleSize">-</div>
+                    </div>
+                    <div class="market-metric">
+                        <h4>Median Sale Price</h4>
+                        <div class="value" id="medianSale">-</div>
+                    </div>
+                    <div class="market-metric">
+                        <h4>Days on Market</h4>
+                        <div class="value" id="daysOnMarket">-</div>
+                    </div>
+                </div>
+
+                <div id="valuationRange" class="valuation-range">
+                    <div class="range-card low">
+                        <h4>Conservative</h4>
+                        <div class="amount" id="lowValue">$0</div>
+                    </div>
+                    <div class="range-card mid">
+                        <h4>Mid-Point</h4>
+                        <div class="amount" id="midValue">$0</div>
+                    </div>
+                    <div class="range-card high">
+                        <h4>Optimistic</h4>
+                        <div class="amount" id="highValue">$0</div>
+                    </div>
+                </div>
+
+                <div id="reliabilityBadge"></div>
+                <div id="warningMessage"></div>
+
+                <div id="executiveSummary" class="executive-summary">
+                    <strong>Enter business information to generate valuation analysis</strong>
+                </div>
+
+                <div class="data-source">
+                    <strong>Data Sources:</strong> BizBuySell 2024 Transaction Database | Methodology: Comparable company analysis with risk adjustments
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete BizBuySell industry database with all subsector data
+        const industryDatabase = {
+            'auto-repair': {
+                sector: 'Automotive and Boat',
+                subsector: 'Auto Repair and Service Shops',
+                reportedSales: 247,
+                medianSalePrice: 475000,
+                medianAskingPrice: 549950,
+                salesToAskingRatio: 0.99,
+                medianRevenue: 964002,
+                revenueMultiple: 0.67,
+                medianCashFlow: 211500,
+                cashflowMultiple: 2.86,
+                daysOnMarket: 208,
+                keywords: ['auto', 'repair', 'automotive', 'mechanic', 'car', 'vehicle', 'service', 'garage', 'diesel', 'engine', 'transmission', 'brake']
+            },
+            'equipment-rental': {
+                sector: 'Automotive and Boat',
+                subsector: 'Equipment Rental and Dealers',
+                reportedSales: 17,
+                medianSalePrice: 1100000,
+                medianAskingPrice: 1100000,
+                salesToAskingRatio: 1.01,
+                medianRevenue: 1880000,
+                revenueMultiple: 0.70,
+                medianCashFlow: 390000,
+                cashflowMultiple: 3.00,
+                daysOnMarket: 269,
+                keywords: ['equipment', 'rental', 'heavy', 'construction', 'machinery', 'tools', 'lease', 'excavator', 'bulldozer', 'crane']
+            },
+            'car-wash': {
+                sector: 'Automotive and Boat',
+                subsector: 'Car Washes',
+                reportedSales: 37,
+                medianSalePrice: 882500,
+                medianAskingPrice: 1100000,
+                salesToAskingRatio: 0.89,
+                medianRevenue: 470500,
+                revenueMultiple: 1.72,
+                medianCashFlow: 212500,
+                cashflowMultiple: 4.12,
+                daysOnMarket: 197,
+                keywords: ['car wash', 'wash', 'detail', 'detailing', 'auto wash']
+            },
+            'gas-station': {
+                sector: 'Automotive and Boat',
+                subsector: 'Gas Stations',
+                reportedSales: 135,
+                medianSalePrice: 620000,
+                medianAskingPrice: 750000,
+                salesToAskingRatio: 1.05,
+                medianRevenue: 1950000,
+                revenueMultiple: 0.56,
+                medianCashFlow: 200000,
+                cashflowMultiple: 3.90,
+                daysOnMarket: 146,
+                keywords: ['gas station', 'fuel', 'petroleum', 'convenience', 'gasoline', 'diesel fuel']
+            },
+            'towing': {
+                sector: 'Automotive and Boat',
+                subsector: 'Towing Companies',
+                reportedSales: 12,
+                medianSalePrice: 1500000,
+                medianAskingPrice: 1500000,
+                salesToAskingRatio: 0.88,
+                medianRevenue: 1332354,
+                revenueMultiple: 1.02,
+                medianCashFlow: 576168,
+                cashflowMultiple: 2.87,
+                daysOnMarket: 173,
+                keywords: ['towing', 'tow', 'recovery', 'roadside', 'wrecker']
+            },
+            'hvac': {
+                sector: 'Building and Construction',
+                subsector: 'HVAC Businesses',
+                reportedSales: 116,
+                medianSalePrice: 815000,
+                medianAskingPrice: 799500,
+                salesToAskingRatio: 0.94,
+                medianRevenue: 1503367,
+                revenueMultiple: 0.62,
+                medianCashFlow: 329875,
+                cashflowMultiple: 2.79,
+                daysOnMarket: 196,
+                keywords: ['hvac', 'heating', 'cooling', 'air conditioning', 'ventilation', 'furnace', 'ac']
+            },
+            'electrical-contracting': {
+                sector: 'Building and Construction',
+                subsector: 'Electrical and Mechanical Contracting Businesses',
+                reportedSales: 65,
+                medianSalePrice: 875000,
+                medianAskingPrice: 1050000,
+                salesToAskingRatio: 0.90,
+                medianRevenue: 1479600,
+                revenueMultiple: 0.60,
+                medianCashFlow: 369807,
+                cashflowMultiple: 2.66,
+                daysOnMarket: 232,
+                keywords: ['electrical', 'electrician', 'wiring', 'electric', 'mechanical', 'contractor']
+            },
+            'plumbing': {
+                sector: 'Building and Construction',
+                subsector: 'Plumbing Businesses',
+                reportedSales: 41,
+                medianSalePrice: 639229,
+                medianAskingPrice: 650000,
+                salesToAskingRatio: 0.92,
+                medianRevenue: 1463103,
+                revenueMultiple: 0.69,
+                medianCashFlow: 306610,
+                cashflowMultiple: 2.46,
+                daysOnMarket: 194,
+                keywords: ['plumbing', 'plumber', 'pipe', 'water', 'sewer', 'drain']
+            },
+            'construction-general': {
+                sector: 'Building and Construction',
+                subsector: 'Other Building and Construction Businesses',
+                reportedSales: 341,
+                medianSalePrice: 699500,
+                medianAskingPrice: 755000,
+                salesToAskingRatio: 0.92,
+                medianRevenue: 1610341,
+                revenueMultiple: 0.56,
+                medianCashFlow: 326250,
+                cashflowMultiple: 2.43,
+                daysOnMarket: 205,
+                keywords: ['construction', 'contractor', 'building', 'remodeling', 'renovation', 'concrete', 'roofing', 'glass', 'installation']
+            },
+            'heavy-construction': {
+                sector: 'Building and Construction',
+                subsector: 'Heavy Construction Businesses',
+                reportedSales: 42,
+                medianSalePrice: 1730000,
+                medianAskingPrice: 1530000,
+                salesToAskingRatio: 0.88,
+                medianRevenue: 3048771,
+                revenueMultiple: 0.55,
+                medianCashFlow: 469330,
+                cashflowMultiple: 2.94,
+                daysOnMarket: 222,
+                keywords: ['heavy construction', 'excavation', 'site work', 'grading', 'infrastructure']
+            },
+            'durable-wholesale': {
+                sector: 'Wholesale and Distributors',
+                subsector: 'Durable Goods Wholesalers and Distributors',
+                reportedSales: 38,
+                medianSalePrice: 1100000,
+                medianAskingPrice: 1050000,
+                salesToAskingRatio: 1.06,
+                medianRevenue: 1943436,
+                revenueMultiple: 0.57,
+                medianCashFlow: 343000,
+                cashflowMultiple: 3.23,
+                daysOnMarket: 188,
+                keywords: ['wholesale', 'distributor', 'distribution', 'durable goods', 'supply', 'equipment distributor']
+            },
+            'nondurable-wholesale': {
+                sector: 'Wholesale and Distributors',
+                subsector: 'Nondurable Goods Wholesalers and Distributors',
+                reportedSales: 19,
+                medianSalePrice: 800000,
+                medianAskingPrice: 999000,
+                salesToAskingRatio: 0.94,
+                medianRevenue: 2256784,
+                revenueMultiple: 0.52,
+                medianCashFlow: 288524,
+                cashflowMultiple: 3.00,
+                daysOnMarket: 200,
+                keywords: ['food distribution', 'food wholesale', 'nondurable', 'consumables', 'beverage']
+            },
+            'other-wholesale': {
+                sector: 'Wholesale and Distributors',
+                subsector: 'Other Wholesalers and Distributors',
+                reportedSales: 76,
+                medianSalePrice: 800000,
+                medianAskingPrice: 900000,
+                salesToAskingRatio: 0.94,
+                medianRevenue: 1536446,
+                revenueMultiple: 0.53,
+                medianCashFlow: 281000,
+                cashflowMultiple: 3.15,
+                daysOnMarket: 172,
+                keywords: ['wholesale', 'distributor', 'distribution', 'supply chain']
+            },
+            'restaurant': {
+                sector: 'Food and Restaurants',
+                subsector: 'Restaurants',
+                reportedSales: 1863,
+                medianSalePrice: 225000,
+                medianAskingPrice: 250000,
+                salesToAskingRatio: 0.89,
+                medianRevenue: 720000,
+                revenueMultiple: 0.38,
+                medianCashFlow: 125000,
+                cashflowMultiple: 2.18,
+                daysOnMarket: 179,
+                keywords: ['restaurant', 'dining', 'food service', 'cafe', 'bistro', 'grill']
+            },
+            'bar': {
+                sector: 'Food and Restaurants',
+                subsector: 'Bars, Pubs and Taverns',
+                reportedSales: 216,
+                medianSalePrice: 300000,
+                medianAskingPrice: 350000,
+                salesToAskingRatio: 0.92,
+                medianRevenue: 790000,
+                revenueMultiple: 0.52,
+                medianCashFlow: 120000,
+                cashflowMultiple: 2.85,
+                daysOnMarket: 184,
+                keywords: ['bar', 'pub', 'tavern', 'nightclub', 'lounge']
+            },
+            'bakery': {
+                sector: 'Food and Restaurants',
+                subsector: 'Bakeries',
+                reportedSales: 114,
+                medianSalePrice: 213000,
+                medianAskingPrice: 275000,
+                salesToAskingRatio: 0.88,
+                medianRevenue: 568335,
+                revenueMultiple: 0.46,
+                medianCashFlow: 113000,
+                cashflowMultiple: 2.29,
+                daysOnMarket: 175,
+                keywords: ['bakery', 'bread', 'pastry', 'cake', 'baking']
+            },
+            'coffee': {
+                sector: 'Food and Restaurants',
+                subsector: 'Coffee Shops and Cafes',
+                reportedSales: 242,
+                medianSalePrice: 150000,
+                medianAskingPrice: 162500,
+                salesToAskingRatio: 0.89,
+                medianRevenue: 344000,
+                revenueMultiple: 0.49,
+                medianCashFlow: 75000,
+                cashflowMultiple: 2.35,
+                daysOnMarket: 142,
+                keywords: ['coffee', 'cafe', 'espresso', 'coffee shop']
+            },
+            'other-service': {
+                sector: 'Service Businesses',
+                subsector: 'Other Service Businesses',
+                reportedSales: 318,
+                medianSalePrice: 450000,
+                medianAskingPrice: 513000,
+                salesToAskingRatio: 0.95,
+                medianRevenue: 813454,
+                revenueMultiple: 0.75,
+                medianCashFlow: 213000,
+                cashflowMultiple: 2.50,
+                daysOnMarket: 177,
+                keywords: ['service', 'consulting', 'professional', 'business service']
+            },
+            'cleaning': {
+                sector: 'Service Businesses',
+                subsector: 'Cleaning Businesses',
+                reportedSales: 162,
+                medianSalePrice: 247000,
+                medianAskingPrice: 255000,
+                salesToAskingRatio: 0.91,
+                medianRevenue: 401086,
+                revenueMultiple: 0.71,
+                medianCashFlow: 132256,
+                cashflowMultiple: 2.18,
+                daysOnMarket: 167,
+                keywords: ['cleaning', 'janitorial', 'maid', 'housekeeping']
+            },
+            'landscaping': {
+                sector: 'Service Businesses',
+                subsector: 'Landscaping and Yard Service Businesses',
+                reportedSales: 190,
+                medianSalePrice: 400000,
+                medianAskingPrice: 475000,
+                salesToAskingRatio: 0.92,
+                medianRevenue: 602400,
+                revenueMultiple: 0.73,
+                medianCashFlow: 186977,
+                cashflowMultiple: 2.52,
+                daysOnMarket: 182,
+                keywords: ['landscaping', 'lawn', 'yard', 'garden', 'grounds', 'snow removal', 'seasonal']
+            },
+            'it-software': {
+                sector: 'Online and Technology',
+                subsector: 'IT and Software Service Businesses',
+                reportedSales: 31,
+                medianSalePrice: 600000,
+                medianAskingPrice: 649000,
+                salesToAskingRatio: 0.88,
+                medianRevenue: 1308757,
+                revenueMultiple: 0.80,
+                medianCashFlow: 223377,
+                cashflowMultiple: 3.01,
+                daysOnMarket: 169,
+                keywords: ['it', 'software', 'technology', 'computer', 'tech', 'programming']
+            },
+            'ecommerce': {
+                sector: 'Online and Technology',
+                subsector: 'Websites and Ecommerce Businesses',
+                reportedSales: 505,
+                medianSalePrice: 707500,
+                medianAskingPrice: 727500,
+                salesToAskingRatio: 0.99,
+                medianRevenue: 908906,
+                revenueMultiple: 1.09,
+                medianCashFlow: 241643,
+                cashflowMultiple: 3.21,
+                daysOnMarket: 60,
+                keywords: ['ecommerce', 'online', 'website', 'digital', 'internet']
+            },
+            'manufacturing': {
+                sector: 'Manufacturing',
+                subsector: 'Other Manufacturing Businesses',
+                reportedSales: 107,
+                medianSalePrice: 995000,
+                medianAskingPrice: 1100000,
+                salesToAskingRatio: 0.94,
+                medianRevenue: 1281714,
+                revenueMultiple: 0.81,
+                medianCashFlow: 323627,
+                cashflowMultiple: 3.27,
+                daysOnMarket: 195,
+                keywords: ['manufacturing', 'production', 'factory', 'industrial', 'fabrication']
+            },
+            'trucking': {
+                sector: 'Transportation and Storage',
+                subsector: 'Trucking Companies',
+                reportedSales: 37,
+                medianSalePrice: 1062500,
+                medianAskingPrice: 1043206,
+                salesToAskingRatio: 0.94,
+                medianRevenue: 1550691,
+                revenueMultiple: 0.63,
+                medianCashFlow: 352911,
+                cashflowMultiple: 2.91,
+                daysOnMarket: 179,
+                keywords: ['trucking', 'transportation', 'freight', 'logistics', 'shipping']
+            }
+        };
+
+        function classifyIndustry(description) {
+            const desc = description.toLowerCase();
+            let bestMatch = null;
+            let highestScore = 0;
+            
+            for (const [key, industry] of Object.entries(industryDatabase)) {
+                let score = 0;
+                for (const keyword of industry.keywords) {
+                    if (desc.includes(keyword)) {
+                        score += keyword.length; // Longer keywords get higher weight
+                    }
+                }
+                
+                if (score > highestScore) {
+                    highestScore = score;
+                    bestMatch = industry;
+                }
+            }
+            
+            return bestMatch || industryDatabase['other-service']; // Default fallback
+        }
+
+        function calculateRiskAdjustment() {
+            const topCustomer = parseFloat(document.getElementById('topCustomer').value) || 0;
+            const management = document.getElementById('managementDepth').value;
+            const recurring = parseFloat(document.getElementById('recurringRevenue').value) || 0;
+            const position = document.getElementById('marketPosition').value;
+            const scope = document.getElementById('geographicScope').value;
+            const trend = document.getElementById('industryTrend').value;
+
+            let adjustment = 0;
+
+            // Customer concentration risk
+            if (topCustomer > 35) adjustment -= 0.5;
+            else if (topCustomer > 15) adjustment -= 0.2;
+
+            // Management depth
+            if (management === 'Owner Only') adjustment -= 0.3;
+            else if (management === 'Key Person') adjustment -= 0.1;
+            else adjustment += 0.1;
+
+            // Recurring revenue premium
+            if (recurring > 70) adjustment += 0.4;
+            else if (recurring > 20) adjustment += 0.2;
+
+            // Market position
+            if (position === 'Leader') adjustment += 0.3;
+            else if (position === 'Struggling') adjustment -= 0.2;
+
+            // Geographic scope
+            if (scope === 'National') adjustment += 0.2;
+            else if (scope === 'Local') adjustment -= 0.1;
+
+            // Industry trend
+            if (trend === 'Growing') adjustment += 0.3;
+            else if (trend === 'Declining') adjustment -= 0.3;
+
+            return adjustment;
+        }
+
+        function getReliabilityRating(transactions) {
+            if (transactions >= 50) return { rating: 'High Reliability', class: 'reliability-high' };
+            if (transactions >= 15) return { rating: 'Medium Reliability', class: 'reliability-medium' };
+            return { rating: 'Low Reliability - Use Caution', class: 'reliability-low' };
+        }
+
+        function getSizeAdjustment(revenue) {
+            if (revenue < 1000000) return 0;
+            if (revenue < 5000000) return 0.2;
+            return 0.5;
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function calculateValuation() {
+            const description = document.getElementById('businessDescription').value;
+            const revenue = parseFloat(document.getElementById('annualRevenue').value) || 0;
+            const ebitda = parseFloat(document.getElementById('ebitda').value) || 0;
+
+            if (!description || !revenue || !ebitda) {
+                alert('Please fill in all required fields (Business Description, Revenue, and EBITDA)');
+                return;
+            }
+
+            const industry = classifyIndustry(description);
+            const riskAdjustment = calculateRiskAdjustment();
+            const sizeAdjustment = getSizeAdjustment(revenue);
+            const reliability = getReliabilityRating(industry.reportedSales);
+
+            // Use the industry's specific cashflow multiple
+            const adjustedMultiple = industry.cashflowMultiple * (1 + sizeAdjustment + riskAdjustment);
+            const midValue = ebitda * adjustedMultiple;
+            const lowValue = midValue * 0.8;
+            const highValue = midValue * 1.2;
+
+            // Update industry classification with sector and subsector
+            document.getElementById('industryClassification').innerHTML = `
+                <h3>Industry Classification</h3>
+                <div class="value">${industry.subsector}</div>
+                <div class="subtitle">Sector: ${industry.sector}</div>
+            `;
+
+            // Update market metrics
+            document.getElementById('marketMultiple').textContent = `${industry.cashflowMultiple.toFixed(2)}x`;
+            document.getElementById('sampleSize').textContent = `${industry.reportedSales} sales`;
+            document.getElementById('medianSale').textContent = formatCurrency(industry.medianSalePrice);
+            document.getElementById('daysOnMarket').textContent = `${industry.daysOnMarket} days`;
+
+            // Update valuation range
+            document.getElementById('lowValue').textContent = formatCurrency(lowValue);
+            document.getElementById('midValue').textContent = formatCurrency(midValue);
+            document.getElementById('highValue').textContent = formatCurrency(highValue);
+
+            // Update reliability badge
+            document.getElementById('reliabilityBadge').innerHTML = `
+                <span class="reliability-badge ${reliability.class}">
+                    ${reliability.rating} (${industry.reportedSales} transactions)
+                </span>
+            `;
+
+            // Warning for low reliability
+            if (industry.reportedSales < 15) {
+                document.getElementById('warningMessage').innerHTML = `
+                    <div class="warning">
+                        ⚠️ Limited transaction data available for this subsector. Use valuation with caution and consider additional market research.
+                    </div>
+                `;
+            } else {
+                document.getElementById('warningMessage').innerHTML = '';
+            }
+
+            // Generate executive summary
+            const summary = generateExecutiveSummary(industry, adjustedMultiple, midValue, lowValue, highValue, riskAdjustment, sizeAdjustment);
+            document.getElementById('executiveSummary').innerHTML = summary;
+        }
+
+        function generateExecutiveSummary(industry, adjustedMultiple, midValue, lowValue, highValue, riskAdjustment, sizeAdjustment) {
+            const revenue = parseFloat(document.getElementById('annualRevenue').value);
+            const ebitda = parseFloat(document.getElementById('ebitda').value);
+            const description = document.getElementById('businessDescription').value;
+
+            return `
+                <strong>VALUATION SUMMARY</strong><br><br>
+                
+                <strong>Business:</strong> ${description}<br>
+                <strong>Sector:</strong> ${industry.sector}<br>
+                <strong>Subsector:</strong> ${industry.subsector}<br>
+                <strong>Annual Revenue:</strong> ${formatCurrency(revenue)}<br>
+                <strong>EBITDA/Cash Flow:</strong> ${formatCurrency(ebitda)}<br><br>
+                
+                <strong>VALUATION RANGE:</strong> ${formatCurrency(lowValue)} - ${formatCurrency(highValue)}<br>
+                <strong>Mid-Point Estimate:</strong> ${formatCurrency(midValue)}<br><br>
+                
+                <strong>MARKET DATA (${industry.subsector}):</strong><br>
+                • Number of Sales: ${industry.reportedSales} transactions<br>
+                • Median Sale Price: ${formatCurrency(industry.medianSalePrice)}<br>
+                • Median Asking Price: ${formatCurrency(industry.medianAskingPrice)}<br>
+                • Sale-to-Ask Ratio: ${(industry.salesToAskingRatio * 100).toFixed(0)}%<br>
+                • Median Revenue: ${formatCurrency(industry.medianRevenue)}<br>
+                • Revenue Multiple: ${industry.revenueMultiple.toFixed(2)}x<br>
+                • Median Cash Flow: ${formatCurrency(industry.medianCashFlow)}<br>
+                • Cash Flow Multiple: ${industry.cashflowMultiple.toFixed(2)}x<br>
+                • Days on Market: ${industry.daysOnMarket} days<br><br>
+                
+                <strong>VALUATION METHODOLOGY:</strong><br>
+                • Base Multiple: ${industry.cashflowMultiple.toFixed(2)}x (${industry.subsector} median)<br>
+                • Size Adjustment: ${sizeAdjustment > 0 ? '+' : ''}${(sizeAdjustment * 100).toFixed(0)}% (${revenue < 1000000 ? 'Micro' : revenue < 5000000 ? 'Small' : 'Lower MM'})<br>
+                • Risk Adjustment: ${riskAdjustment > 0 ? '+' : ''}${(riskAdjustment * 100).toFixed(0)}% (Risk factors assessed)<br>
+                • Final Multiple: ${adjustedMultiple.toFixed(2)}x EBITDA<br><br>
+                
+                <strong>KEY ASSUMPTIONS:</strong><br>
+                • Valuation based on normalized EBITDA/cash flow of ${formatCurrency(ebitda)}<br>
+                • Comparable analysis using ${industry.reportedSales} transactions in ${industry.subsector}<br>
+                • Market conditions as of 2024 BizBuySell data<br>
+                • Subject to due diligence and final negotiations<br>
+                • Assumes arms-length transaction between unrelated parties
+            `;
+        }
+
+        // Auto-classify industry as user types
+        document.getElementById('businessDescription').addEventListener('input', function() {
+            const description = this.value;
+            if (description.length > 10) {
+                const industry = classifyIndustry(description);
+                document.getElementById('industryClassification').innerHTML = `
+                    <h3>Industry Classification</h3>
+                    <div class="value">${industry.subsector}</div>
+                    <div class="subtitle">Sector: ${industry.sector}</div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
